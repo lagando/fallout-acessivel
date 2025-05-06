@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallout 4b: Jogo de Escolhas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #222; /* Cor de fundo escura */
+            color: #fff; /* Cor do texto branca */
+        }
+
+        main {
+            max-width: 600px;
+            margin: auto;
+            background: #333; /* Cor de fundo do conteúdo */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra mais intensa */
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #007bff; /* Cor de fundo do botão */
+            color: #fff; /* Cor do texto do botão */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1 id="game-title">Fallout 4b: Jogo de Escolhas</h1>
+        <div id="game-content" role="region" aria-live="polite"></div>
+        <div id="choices" role="region" aria-live="polite"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameContent = document.getElementById('game-content');
+            const choices = document.getElementById('choices');
+
+            const story = {
+                
+        start: {
+            text: 'Em um futuro distante, o mundo foi devastado por uma guerra nuclear. Você era um dos poucos sortudos a ser selecionado para se refugiar em uma câmara criogênica no Vault 111. Você, seu irmão e seu filho de 5 anos são congelados, para esperar a radiação da guerra baixar. Você acorda após um longo tempo congelado, para descobrir que o mundo que conhecia desapareceu. Todas as câmaras de criogenia estão destruídas, e restos de pessoas podem ser vistos no chão. A câmara do seu irmão está coberta de sangue. Mas a do seu filho está aberta, e não está destruída. Seu principal objetivo é encontrar seu filho, Shaun, que foi sequestrado enquanto você estava em criogenia. O que você faz primeiro?',
+            options: [
+                { text: 'Explorar os arredores do Vault 111', next: 'exploreVault' },
+                { text: 'Procurar ajuda na cidade mais próxima, Sanctuary', next: 'seekHelpSanctuary' }
+            ]
+        },
+        exploreVault: {
+            text: 'Você explora os arredores do Vault 111 e encontra pistas que sugerem que Shaun foi levado por um grupo conhecido como o Instituto. Você também encontra algumas armas e suprimentos. Um documento diz que o Instituto faz experiências com crianças. O que você faz?',
+            options: [
+                { text: 'Investigar mais sobre o Instituto', next: 'investigateInstitute' },
+                { text: 'Procurar ajuda em Sanctuary', next: 'seekHelpSanctuary' },
+                { text: 'Seguir sozinho para Diamond City', next: 'goToDiamondCity' }
+            ]
+        },
+        seekHelpSanctuary: {
+            text: 'Em Sanctuary, você encontra um grupo de sobreviventes liderados por Preston Garvey. Eles se oferecem para ajudar a encontrar Shaun. O que você faz?',
+            options: [
+                { text: 'Aceitar a ajuda deles', next: 'acceptHelp' },
+                { text: 'Recusar e continuar a busca sozinho', next: 'continueAlone' }
+            ]
+        },
+        acceptHelp: {
+            text: 'Com a ajuda dos sobreviventes de Sanctuary, você descobre que Shaun pode ter sido levado para uma instalação misteriosa do Instituto. Preston sugere investigar Diamond City para obter mais informações. O que você faz?',
+            options: [
+                { text: 'Ir para Diamond City', next: 'goToDiamondCity' },
+                { text: 'Seguir outras pistas', next: 'followOtherLeads' }
+            ]
+        },
+        continueAlone: {
+            text: 'Você decide continuar sua busca sozinho. Durante sua jornada, você encontra um mercenário chamado Nick Valentine que oferece sua ajuda, e diz que imagina para onde Shawn foi levado. O que você faz?',
+            options: [
+                { text: 'Aceitar a ajuda de Nick', next: 'acceptNickHelp' },
+                { text: 'Recusar e continuar sozinho', next: 'refuseNickHelp' }
+            ]
+        },
+        investigateInstitute: {
+            text: 'Suas investigações sobre o Instituto revelam que é uma organização avançada tecnologicamente, conhecida por sequestrar pessoas e substituí-las por sintéticos, lideradas por um homem conhecido como "Father". Você também descobre que eles têm uma base secreta. O que você faz?',
+            options: [
+                { text: 'Tentar infiltrar-se no Instituto', next: 'infiltrateInstitute' },
+                { text: 'Procurar aliados para enfrentar o Instituto', next: 'seekAllies' },
+                { text: 'Atacar uma das instalações do Instituto', next: 'attackInstitute' }
+            ]
+        },
+        followOtherLeads: {
+            text: 'Seguindo outras pistas, você descobre a localização de Kellogg, um mercenário associado ao Instituto. O que você faz?',
+            options: [
+                { text: 'Enfrentar Kellogg', next: 'faceKellogg' },
+                { text: 'Espionar Kellogg primeiro', next: 'spyKellogg' }
+            ]
+        },
+        acceptNickHelp: {
+            text: 'Com a ajuda de Nick Valentine, você descobre a localização de Kellogg, o homem que trabalhou 50 anos para o Instituto, organização que sequestrou Shawn. O que você faz?',
+            options: [
+                { text: 'Confrontar Kellogg', next: 'faceKellogg' },
+                { text: 'Espionar Kellogg primeiro', next: 'spyKellogg' }
+            ]
+        },
+        refuseNickHelp: {
+            text: 'Você recusa a ajuda de Nick e continua sozinho. Eventualmente, você descobre a localização de Kellogg, o homem que trabalhou 50 anos para o Instituto, organização que sequestrou Shawn. O que você faz?',
+            options: [
+                { text: 'Confrontar Kellogg', next: 'faceKellogg' },
+                { text: 'Espionar Kellogg primeiro', next: 'spyKellogg' }
+            ]
+        },
+        infiltrateInstitute: {
+            text: 'Você se infiltra no Instituto se depara com "Father", o líder do instituto, te recebe de braços abertos. "Father" está vestido com um terno branco combinando com sua barba e cabelos grizalhos. "Olá, estava te esperando", diz "father". O que você faz?',
+            options: [
+                { text: 'Confrontar "Father" para devolver seu filho.', next: 'confrontShaun' },
+                { text: 'Tentar entender suas motivações', next: 'understandShaun' }
+            ]
+        },
+        seekAllies: {
+            text: 'Você procura aliados para enfrentar o Instituto e eventualmente Você se infiltra no Instituto se depara com "Father", o líder do instituto, te recebe de braços abertos. "Father" está vestido com um terno branco combinando com sua barba e cabelos grizalhos. "Olá, estava te esperando", diz "father". O que você faz?',
+            options: [
+                { text: 'Confrontar "Father" para devolver seu filho.', next: 'confrontShaun' },
+                { text: 'Tentar entender suas motivações', next: 'understandShaun' }
+            ]
+        },
+        attackInstitute: {
+            text: 'Você tenta atacar a instalação do Instituto, mas subestima sua força e morre em batalha. Jamais saberá o paradeiro de seu filho. Fim de jogo.',
+            options: [
+                { text: 'Recomeçar', next: 'start' }
+            ]
+        },
+        faceKellogg: {
+            text: 'Você enfrenta Kellogg e, após uma batalha intensa, descobre que Shaun pode ter sido levado por "Father" o líder da organização chamada o Instituto. O que você faz?',
+            options: [
+                { text: 'Investigar o Instituto', next: 'investigateInstitute' },
+                { text: 'Procurar aliados para ajudar a invadir o Instituto', next: 'seekAllies' }
+            ]
+        },
+        spyKellogg: {
+            text: 'Espionando Kellogg, você descobre que Shaun pode ter sido levado pela organização chamada o Instituto. Após uma batalha intensa, você obtém mais informações, descobre que do Instituto é um homem chamado "Father". O que você faz?',
+            options: [
+                { text: 'Investigar o Instituto', next: 'investigateInstitute' },
+                { text: 'Procurar aliados para ajudar a invadir o Instituto', next: 'seekAllies' }
+            ]
+        },
+        goToDiamondCity: {
+            text: 'Você chega em Diamond City, onde encontra Piper, uma jornalista que oferece ajuda para encontrar Shaun. Ela menciona que um mercenário chamado Kellogg pode ter informações. O que você faz?',
+            options: [
+                { text: 'Investigar Kellogg', next: 'followOtherLeads' },
+                { text: 'Explorar mais sobre o Instituto', next: 'investigateInstitute' }
+            ]
+        },
+        confrontShaun: {
+            text: '"Você ficou bastante tempo na câmara não é?" "Father" diz com a voz mança. Você o confronta "Father" -Onde está meu filho? Onde está Shawn?. "Father" sorri e conta sua história "Quando eu acordei nesse mundo e vi seus horrores, eu criei este instituto para que minha familia pudesse ver um mundo melhor que eu." diz Father. Você reconhece rosto de Father e sente um aperto no coração. E descobre que não se passaram dias que seu filho acordou da criogenia, se passaram 70 anos, Shawn agora um idoso e líder do Instituto. "Father" é Shawn. Ele revela suas motivações e como ele se tornou o líder. Os sequestros tem propósito de usar como cobaia em suas pesquisas. Você deve decidir o que fazer a seguir. O que você faz?',
+            options: [
+                { text: 'Unir-se ao Instituto e ajudar seu filho', next: 'joinInstitute' },
+                { text: 'Destruir o Instituto, e o que seu filho criou', next: 'destroyInstitute' },
+                { text: 'Tentar negociar um acordo de paz com seu filho', next: 'negotiatePeace' }
+            ]
+        },
+        understandShaun: {
+            text: '"Você ficou bastante tempo na câmara não é?" "Father" diz com a voz mança. Você o confronta "Father" -Onde está meu filho? Onde está Shawn?. "Father" sorri e conta sua história "Quando eu acordei nesse mundo e vi seus horrores, eu criei este instituto para que minha familia pudesse ver um mundo melhor que eu." diz Father. Você reconhece rosto de Father e sente um aperto no coração. E descobre que não se passaram dias que seu filho acordou da criogenia, se passaram 70 anos, Shawn agora um idoso e líder do Instituto. "Father" é Shawn. Ele revela suas motivações e como ele se tornou o líder. Os sequestros tem propósito de usar como cobaia em suas pesquisas. Você deve decidir o que fazer a seguir. O que você faz?',
+            options: [
+                { text: 'Unir-se ao Instituto e ajudar seu filho', next: 'joinInstitute' },
+                { text: 'Destruir o Instituto, e o que seu filho criou', next: 'destroyInstitute' },
+                { text: 'TTentar negociar um acordo de paz com seu filho', next: 'negotiatePeace' }
+            ]
+        },
+        joinInstitute: {
+            text: 'Você sabe que o instituto precisa dos sequestros para funcionar. Você diz, "eu quero ficar a seu lado, filho." Você decide se unir ao Instituto e trabalhar ao lado de Shaun. Juntos, vocês tentam criar um novo futuro para a humanidade. Mesmo que isso custe caro. Fim.',
+            options: [
+                { text: 'Recomeçar', next: 'start' }
+            ]
+        },
+        destroyInstitute: {
+            text: 'Você decide destruir o Instituto. Após uma batalha intensa, você e seus aliados conseguem libertar os prisioneiros e acabar com as operações do Instituto. Você encontra seu filho no chão. Ele foi morto em meio a batalha. O Instituto não continuará suas atividades, mas o que você sacrificou nunca será esquecido. Fim.',
+            options: [
+                { text: 'Recomeçar', next: 'start' }
+            ]
+        },
+        negotiatePeace: {
+            text: 'Você tenta negociar um acordo de paz com Shaun. Shawn diz que fez tudo isso por você. Então ele aceita sua proposta. Shawn então faz uma revelação "Me disseram que meu tio estava te procurando." Você se assusta e diz "Como assim, achei que ele estava morto." Uma nova jornada se inicia, você deve encontrar seu irmão. Fim.',
+            options: [
+                { text: 'Recomeçar', next: 'start' }
+            ]
+        }
+    };
+
+    function displayStory(part) {
+        gameContent.innerHTML = `<p>${story[part].text}</p>`;
+        choices.innerHTML = '';
+        story[part].options.forEach(option => {
+            const button = document.createElement('button');
+            button.innerText = option.text;
+            button.onclick = () => displayStory(option.next);
+            choices.appendChild(button);
+        });
+    }
+
+            // Inicia o jogo
+            displayStory('start');
+        });
+    </script>
+<div style="text-align: center;">
+	<br><br>Jogo feito por Gabriel B.  -  gabrielbahiapro@gmail.com
+	<br><br>
+	<a href=""><img src="gabriel.png" alt="Imagem desenhada de Gabriel, cabelos pretos, óculos escuros, deitado em uma rede, relaxando, na praia" style="max-width: 10%; height: auto;"></a>
+</div>
+</body>
+</html>
